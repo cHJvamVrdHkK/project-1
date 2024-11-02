@@ -2,8 +2,8 @@
 set -eu
 
 # Set the source and build directories
-SRC_DIR="src"
-BUILD_DIR="build"
+SRC_DIR="Source"
+BUILD_DIR="Build"
 EXECUTABLE="p1"
 
 # Create build directory if it doesn't exist
