@@ -1,6 +1,12 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+#include "Base/Types/BaseTypes.h"
+
+#include "CarEngine.h"
+#include "CarModel.h"
+#include "CarConfig.h"
+
 struct Editor {
     static CarConfig *savedConfigs;
 
