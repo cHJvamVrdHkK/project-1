@@ -17,15 +17,19 @@ enum class car_engine_kind : uint8_t {
 
 class car_engine {
     std::string name;
-    car_engine_kind kind;
-    float power, torque;
-    float price;
+    //car_engine_kind kind;
+    //float power, torque;
+    //float price;
 
 public:
-    car_engine(const std::string& name, car_engine_kind kind, float power, float torque, float price) 
-        : name(name), kind(kind), power(power), torque(torque), price(price) {}
+    //car_engine(std::string name, car_engine_kind kind, float power, float torque, float price) 
+      //  : name(name), kind(kind), power(power), torque(torque), price(price) {}
+    car_engine(std::string name)
+        : name(name) {}
 
-    const std::string& get_name() const;
+    const std::string &get_name() const {
+        return this->name;
+    }
 };
 
 #endif //CAR_ENGINE_HPP

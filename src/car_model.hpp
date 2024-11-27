@@ -17,7 +17,11 @@ public:
               int base_price = 0) 
         : name(std::move(name)), engines(std::move(engines)), base_price(base_price) {}
 
-    const std::vector<std::shared_ptr<car_engine>>& get_engines() const {
+    const std::string &get_name() const {
+        return name;
+    }
+
+    const std::vector<std::shared_ptr<car_engine>> &get_engines() const {
         return engines;
     }
 };
