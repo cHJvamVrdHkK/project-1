@@ -10,8 +10,43 @@
 #include <memory>
 #include <fstream>
 #include <sstream>
+#include <type_traits>
+
+std::vector<std::vector<std::string>> read_csv(std::string const &path) {
+    std::ifstream file(path);
+
+    std::vector<std::vector<std::string>> result;
+    for(std::string row; std::getline(file, row);) {
+        std::stringstream ss(row); std::vector<std::string> tokens; 
+        for(std::string token; std::getline(ss, token, ';');) {
+            tokens.push_back(token);
+        }
+        result.push_back(std::move(tokens));
+    }
+
+    file.close();
+
+    return result;
+}
+
+template<typename T>
+class repository {
+    static_assert(std::is_base_of<car_feature, T>::value, "Type must inherit from car_feature.");
+
+    std::vector<std::shared_ptr<T>> entities;
+    public:
+    repository() {
+    }
+
+    void add(std::shared_ptr<T> entity) {
+        entities.push_back(entity);
+    }
+};
 
 int main(int argc, char **argv) {
+
+    program::init();
+
 #if 0
     program::engines.push_back(std::make_shared<car_engine>("Engine 1"));
     program::engines.push_back(std::make_shared<car_engine>("Engine 2"));
@@ -30,74 +65,6 @@ int main(int argc, char **argv) {
             engines.push_back(program::engines[i]);
     program::models.push_back(std::make_shared<car_model>("Model 2", engines));
 #endif
-
-    // TODO: Think about how all this loading resources stuff could be abstracted away
-    {
-
-        // Load enignes from file
-        std::ifstream ifs("../resources/engines.csv");
-
-        std::stringstream ss;
-        std::string row;
-
-        std::getline(ifs, row);
-        for (;std::getline(ifs, row);) {
-            ss.str(row);
-
-            std::string id; std::getline(ss, id, ';');
-            std::string name; std::getline(ss, name, ';');
-            program::engines.push_back(std::make_shared<car_engine>(std::stoi(id), name));
-        }
-
-        ifs.close();
-
-        // Load models from file
-        ifs.open("../resources/models.csv");
-
-        std::getline(ifs, row);
-        for (;std::getline(ifs, row);) {
-            ss.str(row);
-
-            std::string id; std::getline(ss, id, ';');
-            std::string name; std::getline(ss, name, ';');
-            program::models.push_back(std::make_shared<car_model>(std::stoi(id), name));
-        }
-
-        ifs.close();
-
-        ifs.open("../resources/features.csv");
-
-        std::getline(ifs, row);
-        for (;std::getline(ifs, row);) {
-            ss.str(row);
-
-            std::string model_id; std::getline(ss, model_id, ';');
-            std::string feature; std::getline(ss, feature, ';');
-            std::string feature_id; std::getline(ss, feature_id, ';');
-
-            // First find model in the global list
-            std::shared_ptr<car_model> model;
-            for(auto m : program::models)
-                if(m->get_id() == std::stoi(model_id)) {
-                    model = m;
-                    break;
-                }
-
-            // Then check what feature are we dealing with
-            if(feature == "Engine") {
-                // Get a reference to engines for car model
-                auto &engines = model->get_engines();
-                // Search for the engine and append to the list then exit the loop
-                for(auto e : program::engines)
-                    if(e->get_id() == std::stoi(feature_id)) {
-                        engines.push_back(e);
-                        break;
-                    }
-            }
-        }
-
-        ifs.close();
-    }
 
     // Create configuration
     {
@@ -136,9 +103,15 @@ int main(int argc, char **argv) {
             new_config.set_engine(engines[n]);
         }
 
-        std::cout << new_config.get_model()->get_name() << '\n';
-        std::cout << new_config.get_engine()->get_name() << '\n';
+        std::ofstream ofs("../resources/configs.csv", std::ios::app);
+        if(ofs.is_open()) {
+            ofs << new_config.get_model()->get_name() << ';';
+            ofs << new_config.get_engine()->get_name() << ';';
+            ofs << '\n';
+        }
     }
 
     return 0;
 }
+
+// sala 201
