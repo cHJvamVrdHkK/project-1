@@ -12,42 +12,11 @@
 #include <sstream>
 #include <type_traits>
 
-std::vector<std::vector<std::string>> read_csv(std::string const &path) {
-    std::ifstream file(path);
-
-    std::vector<std::vector<std::string>> result;
-    for(std::string row; std::getline(file, row);) {
-        std::stringstream ss(row); std::vector<std::string> tokens; 
-        for(std::string token; std::getline(ss, token, ';');) {
-            tokens.push_back(token);
-        }
-        result.push_back(std::move(tokens));
-    }
-
-    file.close();
-
-    return result;
-}
-
-template<typename T>
-class repository {
-    static_assert(std::is_base_of<car_feature, T>::value, "Type must inherit from car_feature.");
-
-    std::vector<std::shared_ptr<T>> entities;
-    public:
-    repository() {
-    }
-
-    void add(std::shared_ptr<T> entity) {
-        entities.push_back(entity);
-    }
-};
-
+#if 0
 int main(int argc, char **argv) {
 
     program::init();
 
-#if 0
     program::engines.push_back(std::make_shared<car_engine>("Engine 1"));
     program::engines.push_back(std::make_shared<car_engine>("Engine 2"));
     program::engines.push_back(std::make_shared<car_engine>("Engine 3"));
@@ -64,7 +33,6 @@ int main(int argc, char **argv) {
         if(i % 2 != 0)
             engines.push_back(program::engines[i]);
     program::models.push_back(std::make_shared<car_model>("Model 2", engines));
-#endif
 
     // Create configuration
     {
@@ -113,5 +81,89 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+#endif
 
-// sala 201
+#include <filesystem>
+
+std::vector<std::vector<std::string>> read_csv(std::string const &path) {
+    std::ifstream file(path);
+
+    std::vector<std::vector<std::string>> result;
+    for(std::string row; std::getline(file, row);) {
+        std::stringstream ss(row); std::vector<std::string> tokens; 
+        for(std::string token; std::getline(ss, token, ',');) {
+            tokens.push_back(token);
+        }
+        result.push_back(std::move(tokens));
+    }
+
+    file.close();
+
+    return result;
+}
+
+int main() {
+    std::string path = "../resources/models";
+
+    for (auto const &entry : std::filesystem::directory_iterator(path)) {
+        auto model_path = entry.path();
+
+        auto *model = new car_model();
+        model->name = model_path.stem().string();
+
+        auto rows = read_csv(model_path.string());
+        for(auto row : rows) {
+            model->components.push_back(car_component::create_from_csv(row));
+        }
+
+        program::models.push_back(model);
+    }
+
+    for(auto *model : program::models) {
+        std::cout << model->name << '\n';
+        for(auto *component : model->components) {
+            if(auto *engine = dynamic_cast<car_engine *>(component))
+                std::cout << '\t' << engine->name << '\n';
+        }
+        std::cout << '\n';
+    }
+
+    // Create configuration
+    {
+        car_config new_config;
+
+        car_model *selected_model; 
+
+        std::cout << "Wybierz model\n";
+        {
+            int i = 0;
+            for(auto *model : program::models)
+                std::cout << ++i << ". " << model->name << '\n';
+
+            std::cout << ">> " << std::flush;
+            int n; std::cin >> n;
+
+            assert(n < program::models.size());
+
+            new_config.model = selected_model = program::models[n];
+        }
+
+
+        std::cout << "Wybierz silnik\n";
+        {
+            auto engines = selected_model->get_engines();
+            for(int i = 0; i < engines.size(); ++i) {
+                std::cout << i << ". " << engines[i]->name << '\n';
+            }
+
+            std::cout << ">> " << std::flush;
+            int n; std::cin >> n;
+
+            new_config.engine = engines[n];
+        }
+
+        std::cout << new_config.model->name << ' ' << new_config.engine->name << '\n';
+    }
+
+    return 0;
+}

@@ -1,10 +1,12 @@
 #ifndef CAR_ENGINE_HPP
 #define CAR_ENGINE_HPP
 
-#include "car_feature.hpp"
+#include "car_component.hpp"
 
 #include <string>
 #include <cstdint>
+#include <vector>
+#include <memory>
 
 enum class car_engine_kind : uint8_t {
     // Combustion engine using petrol as fuel
@@ -17,21 +19,22 @@ enum class car_engine_kind : uint8_t {
     Hybrid,
 };
 
-class car_engine : public car_feature {
+struct car_engine : public car_component {
     std::string name;
     //car_engine_kind kind;
     //float power, torque;
     //float price;
 
-public:
-    //car_engine(std::string name, car_engine_kind kind, float power, float torque, float price) 
-      //  : name(name), kind(kind), power(power), torque(torque), price(price) {}
-    car_engine(uint64_t id, std::string name)
-        : car_feature{id}, name(name) {}
+    car_engine() = default;
 
-    const std::string &get_name() const {
-        return this->name;
-    }
+    car_engine(uint64_t id, std::string name)
+        : name(name) {}
+
+    std::string to_csv() const override;
+
+    void from_csv(std::vector<std::string> const &fields) override;
 };
+
+//std::shared_ptr<car_engine> read_engine(std::vector<std::string> const &row);
 
 #endif //CAR_ENGINE_HPP

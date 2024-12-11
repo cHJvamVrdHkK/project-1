@@ -5,12 +5,12 @@
 
 #include <memory>
 #include <string>
+#include <fstream>
+#include <sstream>
 
-std::vector<std::shared_ptr<car_engine>> program::engines;
-std::vector<std::shared_ptr<car_model>> program::models;
+std::vector<car_model *> program::models;
 
-extern std::vector<std::vector<std::string>> read_csv(std::string const &path);
-
+#if 0
 void program::init() {
     // TODO: Think about how all this loading resources stuff could be abstracted away
     {
@@ -64,3 +64,5 @@ void program::init() {
     ifs.close();
 #endif
 }
+
+#endif
