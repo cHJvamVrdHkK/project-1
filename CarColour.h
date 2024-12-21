@@ -1,7 +1,7 @@
 #ifndef CAR_COLOUR_H
 #define CAR_COLOUR_H
 
-enum class CarChosedColour : C8  {
+enum class CarChosedColour : U8  {
     white,
     black,
     red,
@@ -13,7 +13,7 @@ enum class CarChosedColour : C8  {
 
 class CarColour {
 public:
-    C8 const *_name;
+    U8 const *_name;
     CarChosedColour _colour;
 };
 

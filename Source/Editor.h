@@ -5,7 +5,10 @@
 
 #include "CarEngine.h"
 #include "CarModel.h"
+#include "CarColour.h"
+#include "CarWheels.h"
 #include "CarConfig.h"
+
 
 struct Editor {
     static CarConfig *savedConfigs;

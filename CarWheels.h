@@ -1,7 +1,7 @@
 #ifndef CAR_Wheels_H
 #define CAR_Wheels_H
 
-enum class CarWheelType : W8  {
+enum class CarWheelType : U8  {
     standard,
     sport,
     fullYear,
@@ -9,7 +9,7 @@ enum class CarWheelType : W8  {
 
 class CarColour {
 public:
-    W8 const *_name;
+    U8 const *_name;
     CarWheelType _Wheeltype;
 };
 
