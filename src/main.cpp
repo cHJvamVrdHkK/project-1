@@ -81,7 +81,6 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-#endif
 
 #include <filesystem>
 
@@ -165,5 +164,111 @@ int main() {
         std::cout << new_config.model->name << ' ' << new_config.engine->name << '\n';
     }
 
+    return 0;
+}
+#endif
+
+#include <filesystem>
+
+int main() {
+    std::string path = "../resources/models/";
+
+    // NOTE: Parsing every model config file in resources directory. 
+    // Name of the file is car's make. Config file consists of 
+    // instructions that are parsed by the code path below. Instruction's 
+    // opcode is car component's name.
+    for (auto const &entry : std::filesystem::directory_iterator(path)) {
+        std::ifstream file(entry.path());
+
+        car_model *current_model = nullptr;
+        for(std::string row; std::getline(file, row);) {
+            if(row.empty()) {
+                continue;
+            }
+
+            // NOTE: First token to appear is command. The rest are arguments to that command.
+            std::string command = row, rhs;
+            if(std::size_t pos = row.find(' '); pos != std::string::npos) {
+                command = row.substr(0, pos), rhs = row.substr(pos + 1);
+            }
+
+            // NOTE: 
+            std::stringstream ss;
+            if(command == "model") {
+                // TODO: Error detection if someone puts junk on the line.
+                ss.str(rhs);
+                current_model = new car_model();
+                std::getline(ss, current_model->name, ' ');
+                program::models.push_back(current_model);
+            } else {
+                // NOTE: Check if model command was used and current_model exists so that it can be configured.
+                if(current_model) {
+                    if(command == "engine") {
+                        car_engine *engine = new car_engine();
+
+                        ss.str(rhs);
+                        std::getline(ss, engine->name, ' ');
+
+                        current_model->components.push_back(engine);
+                    } else {
+                        // TODO: Handle the case where command doesn't exist.
+                    }
+                } else {
+                    // TODO: Handle error if model doesn't exist and we are trying to add components to it.
+                }
+            } 
+        }
+
+        file.close();
+    }
+
+    for(auto *model : program::models) {
+        std::cout << model->name << '\n';
+        for(auto *component : model->components) {
+            if(auto *engine = dynamic_cast<car_engine *>(component))
+                std::cout << '\t' << engine->name << '\n';
+        }
+        std::cout << '\n';
+    }
+
+#if 0
+
+    // Create configuration
+    {
+        car_config new_config;
+
+        car_model *selected_model; 
+
+        std::cout << "Wybierz model\n";
+        {
+            int i = 0;
+            for(auto *model : program::models)
+                std::cout << ++i << ". " << model->name << '\n';
+
+            std::cout << ">> " << std::flush;
+            int n; std::cin >> n;
+
+            assert(n < program::models.size());
+
+            new_config.model = selected_model = program::models[n];
+        }
+
+
+        std::cout << "Wybierz silnik\n";
+        {
+            auto engines = selected_model->get_engines();
+            for(int i = 0; i < engines.size(); ++i) {
+                std::cout << i << ". " << engines[i]->name << '\n';
+            }
+
+            std::cout << ">> " << std::flush;
+            int n; std::cin >> n;
+
+            new_config.engine = engines[n];
+        }
+
+        std::cout << new_config.model->name << ' ' << new_config.engine->name << '\n';
+    }
+#endif
     return 0;
 }
