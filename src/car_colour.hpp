@@ -1,5 +1,5 @@
-#ifndef CAR_COLOUR_H
-#define CAR_COLOUR_H
+#ifndef CAR_COLOUR_HPP
+#define CAR_COLOUR_HPP
 #include "car_component.hpp"
 
 #include <string>
