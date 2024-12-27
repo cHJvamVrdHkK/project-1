@@ -1,35 +1,42 @@
 #ifndef CAR_MODEL_HPP
 #define CAR_MODEL_HPP
 
-#include "car_engine.hpp"
-
 #include <vector>
 #include <string>
-#include <memory>
 
-struct car_component;
-struct car_engine;
+class car_component;
 
-struct car_model {
+class car_model {
+public:
+    car_model(std::string name)
+        : name(name) {}
+
+	std::string const &get_name() const {
+		return name;
+	}
+
+	void add_component(car_component *component) {
+		components.push_back(component);
+	}
+
+	template<typename T>
+    std::vector<T *> const get_components() const;
+
+private:
     std::string name;
     std::vector<car_component *> components;
-
-    car_model() = default;
-
-    car_model(uint64_t id, std::string name)
-        : name(std::move(name)) {}
-
-    std::vector<car_engine *> get_engines() {
-        std::vector<car_engine *> result;
-        for(auto *component : components) {
-            if(auto *engine = dynamic_cast<car_engine *>(component)) {
-                result.push_back(engine);
-            }
-        }
-
-        return result;
-    }
-
 };
+
+template<typename T>
+std::vector<T *> const car_model::get_components() const {
+	std::vector<T *> result;
+	for(auto *component : components) {
+		if(T *c = dynamic_cast<T *>(component)) {
+			result.push_back(c);
+		}
+	}
+
+	return result;
+}
 
 #endif //CAR_MODEL_HPP
