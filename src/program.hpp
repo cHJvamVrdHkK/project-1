@@ -2,15 +2,16 @@
 #define PROGRAM_HPP
 
 #include <vector>
-#include <memory>
 
-class car_engine;
 class car_model;
+class car_config;
 
-struct program {
-    static std::vector<car_model *> models;
+class program {
+public:
+    static int main();
 
-    static void init();
+    static std::vector<car_model *> car_models;
+    static std::vector<car_config *> car_configs;
 };
 
 #endif //PROGRAM_HPP
