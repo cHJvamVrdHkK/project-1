@@ -11,12 +11,12 @@ public:
     virtual std::string get_details() const = 0;
     virtual unsigned int calculate_price() const = 0;
 
-	virtual std::string const &get_name() const {
-		return name;
-	}
+    virtual std::string const &get_name() const {
+        return name;
+    }
 
 protected:
-	std::string name;
+    std::string name;
     unsigned int base_price;
 };
 

@@ -3,12 +3,12 @@
 #include <sstream>
 
 std::string car_color::get_details() const {
-	std::stringstream ss;
-	ss << "color: " << name <<  "\n";
+    std::stringstream ss;
+    ss << "color: " << name <<  "\n";
 
-	return ss.str();
+    return ss.str();
 }
 
 unsigned int car_color::calculate_price() const {
-	return base_price;
+    return base_price;
 }
