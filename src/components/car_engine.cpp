@@ -4,10 +4,10 @@
 
 std::string engine_kind_to_string(engine_kind kind) {
     switch(kind) {
-        break;case engine_kind::Petrol: 	return "Petrol";
-        break;case engine_kind::Diesel: 	return "Diesel";
-        break;case engine_kind::Electric: 	return "Electric";
-        break;case engine_kind::Hybrid: 	return "Hybrid";
+        break;case engine_kind::Petrol:     return "Petrol";
+        break;case engine_kind::Diesel:     return "Diesel";
+        break;case engine_kind::Electric:   return "Electric";
+        break;case engine_kind::Hybrid:     return "Hybrid";
     }
     return "Invalid";
 }
@@ -53,7 +53,6 @@ std::string car_engine::get_details() const {
     return ss.str();
 }
 
-unsigned int car_engine::calculate_price() const {
+float car_engine::get_price() const {
     return base_price;
 }
-

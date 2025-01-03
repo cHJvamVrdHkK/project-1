@@ -1,0 +1,22 @@
+model "Taycan" 20000.0
+engine "2.5L 4-Cylinder" 5000 Petrol Manual
+color "White" 0 .4 .32 .12
+color "Black" 0 .4 .89 .12
+wheels "Taycan Areo" 0 19
+wheels "Taycan S Areo" 0 19
+
+model "Cayenne" 20000
+engine "2.5L 4-Cylinder" 5000 Petrol Manual
+color "White" 0 .4 .32 .12
+color "Carmine Red" 100 .4 .89 .12
+color "Montego Blue Metalic" 500 .4 .89 .12
+wheels "Cayenne Design" 0 20
+wheels "Cayenne Sport" 0 20
+wheels "Cayenne S" 0 20
+
+model "Macan" 20000
+engine "2.5L 4-Cylinder" 5000 Petrol Manual
+color "White" 0 .4 .32 .12
+color "Papaya Metalic" 0 .4 .89 .12
+color "Crayon" 0 .4 .89 .12
+wheels "Macan Design" 0 19

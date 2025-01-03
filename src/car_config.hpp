@@ -1,25 +1,14 @@
 #ifndef CAR_CONFIG_HPP
 #define CAR_CONFIG_HPP
 
-#include "components/car_component.hpp"
-
-#include <string>
 #include <array>
 
-class car_model;
 class car_component;
 
 struct car_config {
-    car_model *model;
-    std::array<car_component *, 3> components;
+    float get_price() const;
 
-    unsigned int get_price() const {
-        unsigned int result = 0;
-        for(auto *component : components) {
-            result += component->calculate_price();
-        }
-        return result;
-    }
+    std::array<car_component *, 4> components;
 };
 
 #endif //CAR_CONFIG_HPP

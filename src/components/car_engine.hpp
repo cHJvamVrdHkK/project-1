@@ -21,11 +21,11 @@ gear_box_kind gear_box_kind_from_string(std::string const &str);
 
 class car_engine : public car_component {
 public:
-    explicit car_engine(std::string name, engine_kind kind, gear_box_kind gear_kind) 
-        : car_component(name, 20'000), kind(kind), gear_kind(gear_kind) {}
+    explicit car_engine(std::string name, float price, engine_kind kind, gear_box_kind gear_kind) 
+        : car_component(name, price), kind(kind), gear_kind(gear_kind) {}
 
     std::string get_details() const;
-    unsigned int calculate_price() const;
+    float get_price() const;
 
 private:
     engine_kind kind;

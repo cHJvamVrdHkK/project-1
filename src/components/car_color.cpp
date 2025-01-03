@@ -9,6 +9,6 @@ std::string car_color::get_details() const {
     return ss.str();
 }
 
-unsigned int car_color::calculate_price() const {
+float car_color::get_price() const {
     return base_price;
 }

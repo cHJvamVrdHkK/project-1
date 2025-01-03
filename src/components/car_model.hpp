@@ -1,19 +1,18 @@
 #ifndef CAR_MODEL_HPP
 #define CAR_MODEL_HPP
 
+#include "components/car_component.hpp"
+
 #include <vector>
 #include <string>
 
-class car_component;
-
-class car_model {
+class car_model : public car_component {
 public:
-    car_model(std::string name)
-        : name(name) {}
+    car_model(std::string name, float price)
+        : car_component(name, price) {}
 
-    std::string const &get_name() const {
-        return name;
-    }
+    std::string get_details() const;
+    float get_price() const;
 
     void add_component(car_component *component) {
         components.push_back(component);
@@ -23,7 +22,6 @@ public:
         std::vector<T *> const get_components() const;
 
 private:
-    std::string name;
     std::vector<car_component *> components;
 };
 

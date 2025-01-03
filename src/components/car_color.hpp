@@ -5,12 +5,12 @@
 
 class car_color : public car_component {
 public:
-	car_color() = default;
-	car_color(std::string name) 
-		: car_component(name, 100) {}
+    car_color() = default;
+    car_color(std::string name, float price)
+        : car_component(name, price) {}
 
-	std::string get_details() const;
-	unsigned int calculate_price() const;
+    std::string get_details() const;
+    float get_price() const;
 
 private:
 };
