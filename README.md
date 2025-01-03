@@ -1,0 +1,2 @@
+# Konfigurator samochodowy
+
