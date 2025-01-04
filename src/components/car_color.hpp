@@ -5,8 +5,7 @@
 
 class car_color : public car_component {
 public:
-    car_color() = default;
-    car_color(std::string name, float price)
+    explicit car_color(std::string name, float price)
         : car_component(name, price) {}
 
     std::string get_details() const;

@@ -1,22 +1,31 @@
-model "Taycan" 20000.0
-engine "2.5L 4-Cylinder" 5000 Petrol Manual
-color "White" 0 .4 .32 .12
-color "Black" 0 .4 .89 .12
-wheels "Taycan Areo" 0 19
-wheels "Taycan S Areo" 0 19
+model "Taycan" 489000 "Niedoscigniony wzor elektrycznego samochodu sportowego"
+engine "ELECTRIC 89 kWh 408 KM" 0 Electric Automatic
+color "White" 0
+color "Black" 0
+color "Jet Black Metallic" 5006
+color "Ice Grey Metallic" 5006
+color "Carmine Red" 8000
+color "Purple Sky Metallic" 8000
+color "Shade Green Metallic" 15226
+wheels "Taycan Aero" 0 19
+wheels "Taycan S Aero" 4955 19
 
-model "Cayenne" 20000
-engine "2.5L 4-Cylinder" 5000 Petrol Manual
-color "White" 0 .4 .32 .12
-color "Carmine Red" 100 .4 .89 .12
-color "Montego Blue Metalic" 500 .4 .89 .12
+model "Cayenne" 478000 "Samochód sportowy dostosowany do kazdego terenu"
+engine "PETROL 353 KM" 0 Petrol Automatic
+color "White" 0
+color "Chromite Black Metallic" 0
+color "Carmine Red" 9575
+color "Montego Blue Metallic" 18222
 wheels "Cayenne Design" 0 20
-wheels "Cayenne Sport" 0 20
-wheels "Cayenne S" 0 20
+wheels "Cayenne Sport" 4695 20
+wheels "Cayenne S" 2842 20
 
-model "Macan" 20000
-engine "2.5L 4-Cylinder" 5000 Petrol Manual
-color "White" 0 .4 .32 .12
-color "Papaya Metalic" 0 .4 .89 .12
-color "Crayon" 0 .4 .89 .12
-wheels "Macan Design" 0 19
+model "Macan" 298000 "Samochod sportowy wsrod kompaktowych SUV-ow"
+engine "PETROL 265 KM" 0 Petrol Automatic
+engine "ELECTRIC 100 kWh 360 KM" 72000 Electric Automatic
+color "White" 0
+color "Black" 0
+color "Papaya Metallic" 4256
+color "Crayon" 10589
+wheels "Macan Sport" 0 19
+wheels "Macan Design" 2447 19

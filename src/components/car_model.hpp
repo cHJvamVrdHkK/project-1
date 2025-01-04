@@ -8,8 +8,8 @@
 
 class car_model : public car_component {
 public:
-    car_model(std::string name, float price)
-        : car_component(name, price) {}
+    explicit car_model(std::string name, float price, std::string desc)
+        : car_component(name, price), desc(desc) {}
 
     std::string get_details() const;
     float get_price() const;
@@ -23,6 +23,7 @@ public:
 
 private:
     std::vector<car_component *> components;
+    std::string desc;
 };
 
 template<typename T>

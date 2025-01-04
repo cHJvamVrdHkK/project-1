@@ -4,7 +4,7 @@
 
 std::string car_wheels::get_details() const {
     std::stringstream ss;
-    ss << "wheels: " << name <<  "\n";
+    ss << radius << "-calowe";
 
     return ss.str();
 }

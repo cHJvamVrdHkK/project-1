@@ -4,7 +4,7 @@
 #include <sstream>
 
 std::string car_model::get_details() const {
-    return "";
+    return desc;
 }
 
 float car_model::get_price() const {

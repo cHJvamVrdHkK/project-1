@@ -37,14 +37,13 @@ static void init_models() {
         stream >> command;
 
         if(command == "model") {
-            std::string name;
+            std::string name, desc;
             float price;
-            stream >> std::quoted(name) >> price;
+            stream >> std::quoted(name) >> price >> std::quoted(desc);
 
             program::car_models.push_back(
-                    current_model = new car_model(name, price));
+                    current_model = new car_model(name, price, desc));
         } else {
-            // NOTE: Check if model command was used and current_model exists so that it can be configured.
             if(current_model) {
                 std::string name;
                 float price;
@@ -68,9 +67,6 @@ static void init_models() {
 
                     current_model->add_component(new car_engine(name, price, kind, gear_kind));
                 } else if(command == "color") {
-                    float r, g, b;
-                    stream >> r >> g >> b;
-
                     current_model->add_component(new car_color(name, price));
                 } else if(command == "wheels") {
                     int radius;
@@ -181,7 +177,7 @@ void program::update() {
                 config.components[2] = colors[item_current_3];
 
                 auto wheels = model->get_components<car_wheels>();
-                ImGui::Combo("Kola", &item_current_4, car_component_getter, (void *)&wheels, wheels.size());
+                ImGui::Combo("Obrecze", &item_current_4, car_component_getter, (void *)&wheels, wheels.size());
                 config.components[3] = wheels[item_current_4];
             }
             ImGui::EndChild();
@@ -194,7 +190,7 @@ void program::update() {
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
             ImGui::BeginChild("ChildR", ImVec2(0, 0), ImGuiChildFlags_Borders, window_flags);
             {
-                static char const *separators[] = {"Model", "Silnik", "Kolor", "Kola"};
+                static char const *separators[] = {"Model", "Silnik", "Kolor", "Obrecze"};
                 for(auto i = 0; i < config.components.size(); ++i) {
                     auto *component = config.components[i];
 
@@ -202,20 +198,20 @@ void program::update() {
 
                     ImGui::Text("%s", component->get_name().c_str());
                     ImGui::SameLine();
-                    //std::cout << ImGui::GetContentRegionAvail().x;
-                    ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.2f PLN", component->get_price());
+                    ImGui::TextColored(ImVec4(1, 0, 1, 1), "%.2f PLN", component->get_price());
+
+                    ImGui::TextWrapped("%s", component->get_details().c_str());
                 }
 
-                ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-                ImGui::Text("Cena: ");
+                ImGui::Text("Cena:");
                 ImGui::SameLine();
                 ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.2f", config.get_price());
 
                 if(ImGui::Button("Zapisz")) {
                     std::ofstream out(config_path);
-                    for(auto *component : config.components) {
-                        out << component->get_details();
+                    for(auto i = 0; i < config.components.size(); ++i) {
+                        auto *component = config.components[i];
+                        out << separators[i] << ": " << component->get_name() << '\n';
                     }
                     out.close();
                 }

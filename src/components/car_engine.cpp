@@ -28,8 +28,8 @@ engine_kind engine_kind_from_string(std::string const &str) {
 
 std::string gear_box_kind_to_string(gear_box_kind kind) {
     switch(kind) {
-        break;case gear_box_kind::Manual: 		return "Manual";
-        break;case gear_box_kind::Automatic: 	return "Automatic";
+        break;case gear_box_kind::Manual:       return "Manual";
+        break;case gear_box_kind::Automatic:    return "Automatic";
     }
     return "Invalid";
 }
@@ -46,9 +46,7 @@ gear_box_kind gear_box_kind_from_string(std::string const &str) {
 
 std::string car_engine::get_details() const {
     std::stringstream ss;
-    ss << "engine: " << name <<  "\n";
-    ss << '\t' << "kind: " << engine_kind_to_string(kind) <<  "\n";
-    ss << '\t' << "gear box: " << gear_box_kind_to_string(gear_kind) <<  "\n";
+    ss << engine_kind_to_string(kind) <<  ", " << gear_box_kind_to_string(gear_kind);
 
     return ss.str();
 }
