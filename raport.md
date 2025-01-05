@@ -6,7 +6,7 @@
 
 ## Cel projektu 
 
-Napisać program w języku C++ przy użyciu technik programowania obiektowego, takich jak dziedziczenie, polimorfizm oraz klasy abstrakcyjne i wewnętrzne. u. Program ma umożliwiać odczyt i zapis danych do pliku. 
+Napisać program w języku C++ przy użyciu technik programowania obiektowego, takich jak dziedziczenie, polimorfizm oraz klasy abstrakcyjne i wewnętrzne. Program ma umożliwiać odczyt i zapis danych do pliku. 
 
 ## Opis projektu 
 
@@ -126,9 +126,9 @@ W folderze ”components” znajdują się wszystkie komponenty pojazdu w konfig
 
 Folder ”third_party” wspiera działanie GUI 
 
-## Interfejs imgui
+## Interfejs ImGui
 
-Do wykonania tego projek
+Do wykonania tego projektu skorzystaliśmy z ImGui. Skożystaliśmy z tej biblioteki, gdyż jest łatwy w użytku oraz prosty w implementacji.  
 
 # Przykłady działania ze zrzutami ekranu: 
 
@@ -163,8 +163,6 @@ Gdy to zrobimy, w folderze ”Data” w pliku ”config” pojawi się nam zapis
 ![](obrazy/7.png) 
 
 Okienko konfiguracji po zapisaniu się nie wyłącza, w przypadku gdy zaszła jakaś pomyłka bez żadnych problemów jesteśmy w stanie zmienić opcje w konfiguratorze i zapisać poprawną. Po takich operacjach konfiguracja zostanie nadpisana. Jeśli wszystko jest w porządku, okienko można zamknąć klikając w okienko zamykające.  
-
-
 
 # Wnioski: 
 
