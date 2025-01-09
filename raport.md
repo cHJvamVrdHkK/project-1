@@ -1,169 +1,253 @@
-## Temat projektu: Konfigurator samochodowy 
+<div style="text-align: center; padding-bottom: 50px">
+    <h1 style="font-size: 1.5em">Projekt <br> Wstęp do programowania w języku C/C++</h2>
+    <h1 style="font-size: 3em">Konfigurator samochodowy</h1>
+    <p style="font-size: 1.2em">Autorzy: Mateusz Miś, Łukasz Musiał, Maciej Żwirski</p>
+</div>
 
-## Nazwiska autorów: Żwirski, Miś, Musiał 
+# Wstęp
 
-# Wstęp teorytyczny: 
+## Cel projektu
 
-## Cel projektu 
+Napisać program w języku C++ przy użyciu technik programowania obiektowego, takich jak dziedziczenie, polimorfizm oraz klasy abstrakcyjne i wewnętrzne. Program ma umożliwiać odczyt i zapis danych do pliku.
 
-Napisać program w języku C++ przy użyciu technik programowania obiektowego, takich jak dziedziczenie, polimorfizm oraz klasy abstrakcyjne i wewnętrzne. Program ma umożliwiać odczyt i zapis danych do pliku. 
+## Opis programu
 
-## Opis projektu 
+Program pozwala na konfigurację samochodu poprzez wybór parametrów z list rozwijalnych. Na podstawie wybranych opcji program oblicza całkowity koszt samochodu. Wybrane parametry, szczegółowy opis i cena, są wyświetlane w podsumowaniu. Konfigurację można zapisać do pliku. Program działa tylko na systemie Windows.
 
-Program pozwala na konfigurację samochodu poprzez wybór parametrów z list rozwijalnych. Na podstawie wybranych opcji program oblicza całkowity koszt samochodu. Wybrane parametry, szczegółowy opis i cena, są wyświetlane w podsumowaniu. Program pozwala na zapis konfiguracji samochodu do pliku. 
+# Działanie programu
 
-# Opis implementacji z fragmentami kodu źródłowego: 
+W lewej części okna programu znajdują się listy rozwijalne z opcjami konfiguracji. W prawej części znajduje się podsumowanie, które zawiera nazwy wybranych części, ich cenę oraz szczegóły. Również w podsumowaniu, na dole znajduje całkowity koszt pojazdu oraz przycisk, który zapisuje utworzoną konfigurację do pliku `data/config`.
 
-## Z wymagań dotyczących projektu: 
+![konfigurator](obrazy/1.png)
 
-## Dziedziczenie 
+Wybrane opcje z list rozwijalnych można zmieniać. 
 
-Dziedziczenie w C++ jest jednym z kluczowych elementów programowania obiektowego. Umożliwia ono tworzenie nowych klas (klas pochodnych), które dziedziczą cechy (pola i metody) z istniejących już klas (klas bazowych). Dzięki dziedziczeniu można ponownie używać kodu, rozszerzać jego funkcjonalność i zapewnić lepszą strukturę programu.
+![konfigurator](obrazy/2.png)
 
-Przykładowy fragment z car_wheels.hpp: 
-```c++
-class car_wheels : public car_component { 
-    public: 
-    explicit car_wheels(std::string name, float price, float radius) 
-        : car_component(name, price), radius(radius) {} 
+Po ponownym kliknięciu przycisku odpowiadającego za zapis konfiguracji do pliku, poprzednia konfiguracja zostanie nadpisana. 
 
-    std::string get_details() const; 
+```
+// Przykładowa zawartość pliku data/config
 
-    float get_price() const; 
-    
-    private: 
-
-    float radius; 
-}; 
+Model: Taycan
+Silnik: ELECTRIC 89 kWh 408 KM
+Kolor: White
+Obrecze: Taycan Aero
 ```
 
-## Polimorfizm 
+# Implementacja
 
-Polimorfizm w C++ to jedna z kluczowych zasad programowania obiektowego, która pozwala na definiowanie różnych zachowań dla różnych klas przy użyciu wspólnego interfejsu. Innymi słowy, dzięki polimorfizmowi możemy wywoływać metody w klasach pochodnych za pomocą wskaźnika lub referencji do klasy bazowej. 
+## Format pliku do przechowywania modeli samochodów
 
-Przykładowy fragment w car_component.hpp: 
-```c++
-    public: 
-    car_component(std::string name, unsigned int base_price) 
-
-        : name(name), base_price(base_price) {} 
-
-    virtual std::string get_details() const = 0; 
-
-    virtual float get_price() const = 0; 
-
-    virtual std::string const &get_name() const { 
-
-        return name; 
-
-    } 
+Plik, w którym przechowywane są dane dotyczące modeli pojazdów, składa się z instrukcji, które są wykonywane linia po linii. Każda instrukcja składa się z nazwy instrukcji i listy argumentów. Dodanie nowego modelu pojazdu rozpoczyna instrukcja _model_, która przyjmuje nazwę, cenę bazową oraz opis, np.:
 ```
-## Klasy abstrakcyjne 
-
-Klasa abstrakcyjna to taka klasa, która zawiera co najmniej jedną metodę czysto wirtualną. Klasy abstrakcyjne nie mogą być instancjonowane (nie można utworzyć ich obiektu), ale mogą być używane jako klasy bazowe. Służą one do definiowania interfejsów lub wspólnego zachowania dla klas pochodnych. 
-
-Przykładowy fragment w car_component.hpp: 
-```c++
-public: 
-    car_component(std::string name, unsigned int base_price) 
-
-        : name(name), base_price(base_price) {} 
-
-    virtual std::string get_details() const = 0; 
-
-    virtual float get_price() const = 0; 
-
-    virtual std::string const &get_name() const { 
-
-        return name; 
-    } 
-
-protected: 
-
-    std::string name; 
-
-    float base_price;  
+model "Taycan" 489000 "Niedościgniony wzór elektrycznego samochodu sportowego"
 ```
- 
-
-## Klasy wewnętrzne 
-
-Klasy wewnętrzne w C++ to klasy zdefiniowane wewnątrz innej klasy. Są one używane, gdy chcemy, aby dana klasa była logicznie powiązana z inną klasą, ale niekoniecznie była dostępna poza tą klasą. Klasy wewnętrzne mają kilka zastosowań, takich jak enkapsulacja szczegółów implementacyjnych czy organizacja kodu w przejrzysty sposób. 
-
-Przykładowy fragment w 
-
- 
-
-## Odczytywanie z pliku 
-
-Odczyt danych z pliku w C++ został zrealizowany za pomocą stream z biblioteki <fstream>. 
-
-Przykładowy fragment w program.cpp: 
-```c++
-std::ifstream file(program::models_path); 
+Kolejne instrukcje opisują dostępne części dla danego modelu, np.:
 ```
-## Zapisywanie do pliku 
-
-Zapis do pliku w C++  został zrealizowany za pomocą klasy std::ofstream, dostępnej w bibliotece <fstream>. (Tak jak powyżej) Po zrealizowaniu zadania, plik zostaje zamknięty. 
-
-Przykładowy fragment w program.cpp: 
-```c++
-stream >> std::quoted(name) >> price >> std::quoted(desc);
+color "Papaya Metallic" 4256
+color "Crayon" 10589
 ```
-## Struktura projektu
+Oznacza to, że dla danego modelu dostępne są dwa kolory o podanych nazwach i cenach, które są określone w argumentach.
 
-![](obrazy/pre.png)
+Program zakłada, że definicje modeli znajdują się w pliku `data/models`, który jest wczytywany na samym początku działania programu w funkcji `init_models()` w pliku `src/program.cpp`.
 
-W folderze “data” znajdują się dwa pliki zawierające konfiguracje: 
+```c++
+// fragmenty funkcji init_models()
+std::ifstream file(program::models_path);
 
--”config “zawierający konfiguracje z programu (plik powstaje dopiero po zapisaniu konfiguracji) 
+car_model *current_model = 0;
+std::string line;
+for(int line_number = 1; std::getline(file, line); ++line_number) {
+    if(line.empty()) continue;
 
--”models” zawierający już gotowe modele 
+    std::istringstream stream(line);
 
-W folderze ”src” znajduje się cały program. 
+    std::string command;
+    stream >> command;
 
-W folderze ”components” znajdują się wszystkie komponenty pojazdu w konfiguracji. 
+    if(command == "model") {
+        ...
+    } else {
+        if(current_model) {
+            std::string name;
+            float price;
+            stream >> std::quoted(name) >> price;
 
-Folder ”third_party” wspiera działanie GUI 
+            if(command == "engine") {
+                ...
+            } else if(...) {
+                ...
+            } else {
+                ...
+                continue;
+            }
+        } else {
+            ...
+            continue;
+        }
+    }
+}
 
-## Interfejs ImGui
+file.close();
+```
 
-Do wykonania tego projektu skorzystaliśmy z ImGui. Skożystaliśmy z tej biblioteki, gdyż jest łatwy w użytku oraz prosty w implementacji.  
+## Okno aplikacji
 
-# Przykłady działania ze zrzutami ekranu: 
+### Rejestrowanie Window Class
 
-Początkowy widok konfiguracji pojazdu: 
+```c++
+WNDCLASSEXW wc = {};
+wc.cbSize = sizeof(wc);
+wc.lpfnWndProc = WindowProc;
+wc.hInstance = GetModuleHandle(0);
+wc.lpszClassName = L"HelloSailor";
 
-![](obrazy/1.png)
+RegisterClassExW(&wc);
+```
 
-W lewej części GUI znajdują się dostępne opcje konfiguracji. Kolejno: Model, Silnik, Kolor i Koła. W prawej części jest natomiast podsumowanie i szacowany koszt za pojazd. 
+### Tworzenie okna
 
-Dostępne są trzy modele. Taycan, Cayenne oraz Macan. Zmiana modelu nie wpływa na szacowany koszt. 
+```c++
+DWORD style = WS_OVERLAPPEDWINDOW|WS_SIZEBOX;
+HWND hwnd = CreateWindowW(
+    wc.lpszClassName, 
+    L"Konfigurator", 
+    style,
+    CW_USEDEFAULT, CW_USEDEFAULT, 
+    640, 480,
+    0, 0, wc.hInstance, 0);
+```
 
-![](obrazy/2.png)
+### Pokazanie okna
 
-Silnik jest sprzedawany tylko w jednej możliwej opcji dla zoptymalizowania produkcji pojazdu. 
+```c++
+ShowWindow(hwnd, SW_SHOWDEFAULT);
+```
 
-![](obrazy/3.png)
+## Dear ImGui
 
-Następnie wybieramy kolor. W zależności od koloru jaki wybierze użytkownik ogólna wycena konfiguracji może się zmienić. Domyślnie dla pojazdu kolor jest biały i jego wycena jest za 0 PLN.
+Interfejs użytkownika stworzono przy użyciu biblioteki _Dear ImGui_. Zgodnie z dokumentacją, aby zacząć użwyać tej biblioteki trzeba stworzyć _kontekst Dear ImGui_ używając `ImGui::CreateContext()`. Następnie zainicializować używająć `ImGui_ImplWin32_Init()` i `ImGui_ImplDX11_Init()`. Na początku pętli głównej programu wywołać `ImGui_ImplDX11_NewFrame()`, `ImGui_ImplWin32_NewFrame()` oraz `ImGui::NewFrame()`, a na końcu `ImGui::Render()` i `ImGui_ImplDX11_RenderDrawData()`.
 
-![](obrazy/4.png)
+```c++
+// Wybrane fragmentu z src/main.cpp
 
-Ostatnie do wyboru zostały nam opony. Do wyboru mamy różne dobory opon w zależności od wybranego modelu, tak aby użytkownik przez przypadek nie skonfigurował złego modelu opon z modelem pojazdu. 
+ImGui::CreateContext();
 
-![](obrazy/5.png)
+ImGui_ImplWin32_Init(hwnd);
+ImGui_ImplDX11_Init(d3d11_device, d3d11_device_context);
 
-Gdy nasza konfiguracja jest już gotowa klikamy ”Zapisz”. 
+// Pętla główna
+for(...) {
+    ...
 
-![](obrazy/6.png)
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
 
-Gdy to zrobimy, w folderze ”Data” w pliku ”config” pojawi się nam zapisana konfiguracja pojazdu. 
+    program::update();
 
-![](obrazy/7.png) 
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(...);
 
-Okienko konfiguracji po zapisaniu się nie wyłącza, w przypadku gdy zaszła jakaś pomyłka bez żadnych problemów jesteśmy w stanie zmienić opcje w konfiguratorze i zapisać poprawną. Po takich operacjach konfiguracja zostanie nadpisana. Jeśli wszystko jest w porządku, okienko można zamknąć klikając w okienko zamykające.  
+    ...
+}
 
-# Wnioski: 
+ImGui_ImplDX11_Shutdown();
+ImGui_ImplWin32_Shutdown();
+ImGui::DestroyContext();
+```
 
-Opracowany program umożliwia konfigurację samochodu poprzez wybór dostępnych opcji, automatyczne obliczenie wstępnych kosztów opłat oraz zapis i odczyt konfiguracji w pliku w formie raportu. Skutecznie wspomaga użytkownika w doborze komponentów samochodu tworząc ostatecznie jego konfiguracje. Interfejs graficzny programu (GUI) został zaprojektowany z myślą o intuicyjnej obsłudze użytkownika, a wszelkie zmiany w programie są przetwarzane w czasie rzeczywistym i prezentowane w panelu statusu w prawej części okna. Wybrane opcje są zapisywane w pliku w formie raportu. Program nie wyłącza się automatycznie po zapisaniu danych, co umożliwia użytkownikowi natychmiastowe wprowadzanie poprawek. Dzięki temu rozwiązanie wspiera użytkownika w efektywnym procesie konfiguracji pojazdu. 
+W metodzie `program::update()` tworzony jest cały układ interfejsu użytkownika.  
+
+```c++
+// fragment z pliku program.cpp wyświetlająy podsumowanie
+ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
+ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+ImGui::BeginChild("ChildR", ImVec2(0, 0), ImGuiChildFlags_Borders, window_flags);
+{
+    static char const *separators[] = {"Model", "Silnik", "Kolor", "Obrecze"};
+    for(auto i = 0; i < config.components.size(); ++i) {
+        auto *component = config.components[i];
+
+        ImGui::SeparatorText(separators[i]);
+
+        ImGui::Text("%s", component->get_name().c_str());
+        ImGui::SameLine();
+        ImGui::TextColored(ImVec4(1, 0, 1, 1), "%.2f PLN", component->get_price());
+
+        ImGui::TextWrapped("%s", component->get_details().c_str());
+    }
+
+    ImGui::Text("Cena:");
+    ImGui::SameLine();
+    ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.2f", config.get_price());
+
+    if(ImGui::Button("Zapisz")) {
+        ...
+    }
+}
+ImGui::EndChild();
+```
+
+## Programowanie obiektowe
+
+### Klasa Abstrakcyjna
+
+W pliku `src/components/car_component.hpp` znajduje się definicja klasy abstrakcyjnej `car_component`. O tym, że jest to klasa abstrakcyjna świadczą dwie metody czysto wirtualne. Nie można utworzyć obiektu takiej klasy.
+
+```c++
+class car_component {
+public:
+    ...
+    // Metody czysto wirtualne
+    virtual std::string get_details() const = 0;
+    virtual float get_price() const = 0;
+    ...
+};
+```
+
+### Dziedziczenie
+
+Wszystkie klasy opisujące części samochodu w `src/components/` dziedziczą publicznie po klasie abstrakcyjnej `car_component`.
+
+```c++
+class car_XXX : public car_component {
+public:
+    ...
+    std::string get_details() const;
+    float get_price() const;
+
+private:
+    ...
+};
+```
+
+### Polimorfizm
+
+Wykorzystano w metodzie `car_config::get_price()`, gdzie klasa `car_config` zawiera pole `std::array<car_component *, 4> components`. Pozwala policzyć cenę całego samochodu, bez znajomości dokładnego typu poszczególnych części samochodu.
+
+```c++
+// implementacja metody car_config::get_price()
+float result = 0;
+for(auto *component : components) {
+    result += component->get_price();
+}
+return result;
+```
+
+# Wnioski
+
+Realizacja projektu pozwoliła na zdobycie podstawowej wiedzy z zakresu programowania obiektowego. Nauczyliśmy się, jak tworzyć okno aplikacji i obsługiwać zdarzenia od użytkownika oraz systemu operacyjnego, wykorzystując Win32 API. Ponadto, zapoznaliśmy się z procesem inicjalizacji DirectX11 oraz tworzeniem swap chain, który umożliwia wyświetlanie obrazu w oknie. Dodatkowo, poznaliśmy bibliotekę Dear ImGui, której użyliśmy do stworzenia interfejsu użytkownika. Link do repozytorium: https://github.com/cHJvamVrdHkK/project-1
+
+# Źródła
+
+https://learn.microsoft.com/en-us/windows/win32/learnwin32/creating-a-window
+
+https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11
+
+https://en.cppreference.com/w/
+
+https://github.com/ocornut/imgui
+
+http://www.directxtutorial.com
