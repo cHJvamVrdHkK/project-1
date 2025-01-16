@@ -9,7 +9,10 @@ public:
         : name(name), base_price(base_price) {}
 
     virtual std::string get_details() const = 0;
-    virtual float get_price() const = 0;
+
+    virtual float get_price() const {
+        return base_price;
+    }
 
     virtual std::string const &get_name() const {
         return name;

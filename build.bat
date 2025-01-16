@@ -24,11 +24,6 @@ if "%release%"=="1"   set compile=%compile_release%
 if not exist build mkdir build
 pushd build
 
-set cpp_files=
-for /R ..\src %%f in (*.cpp) do (
-    set cpp_files=!cpp_files! "%%f"
-)
-
-%compile% !cpp_files! %out%project.exe || exit /b 1
+%compile% ..\src\main.cpp ..\src\program.cpp ..\src\components.cpp ..\src\third_party\imgui\imgui_draw.cpp ..\src\third_party\imgui\imgui.cpp ..\src\third_party\imgui\imgui_widgets.cpp ..\src\third_party\imgui\imgui_tables.cpp ..\src\third_party\imgui\imgui_impl_dx11.cpp ..\src\third_party\imgui\imgui_impl_win32.cpp %out%project.exe || exit /b 1
 
 popd

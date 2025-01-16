@@ -1,21 +1,22 @@
 #ifndef PROGRAM_HPP
 #define PROGRAM_HPP
 
-#include <vector>
-#include <fstream>
+#include "components.hpp"
 
-class car_model;
-class car_config;
+#include <vector>
+#include <array>
 
 class program {
 public:
-    static void init();
+    static void load_models();
     static void update();
 
-    static std::vector<car_model *> car_models;
-    static car_config config;
+    static float get_config_price();
+
     static std::string models_path;
     static std::string config_path;
+    static std::vector<components::model *> car_models;
+    static std::array<car_component *, 4> selected_components;
 };
 
 #endif //PROGRAM_HPP

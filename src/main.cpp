@@ -4,7 +4,6 @@
 #include "imgui/imgui_impl_dx11.h"
 
 #include <d3d11.h>
-#include <tchar.h>
 
 #pragma comment(lib, "d3d11")
 
@@ -14,27 +13,83 @@ static IDXGISwapChain *dxgi_swap_chain;
 static UINT resize_width, resize_height;
 static ID3D11RenderTargetView *d3d11_render_target_view;
 
-LRESULT WINAPI WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+LRESULT WINAPI window_proc(HWND window, UINT msg, WPARAM wparam, LPARAM lparam) {
+    if (ImGui_ImplWin32_WndProcHandler(window, msg, wparam, lparam))
+        return true;
+
+    LRESULT result = 0;
+    switch (msg) {
+        case WM_SIZE: {
+            if (wparam == SIZE_MINIMIZED)
+                break;
+            resize_width = (UINT)LOWORD(lparam);
+            resize_height = (UINT)HIWORD(lparam);
+        } break;
+
+        case WM_DESTROY: {
+            PostQuitMessage(0);
+        } break;
+
+        default: {
+            result = DefWindowProcW(window, msg, wparam, lparam);
+        } break;
+    }
+    return result;
+}
+
+static std::string chop_last_slash(std::string const &str) {
+    size_t pos = str.find_last_of("\\/");
+    if (pos != std::string::npos) {
+        return str.substr(0, pos);
+    }
+    return str;
+}
+
+static std::string get_binary_path() {
+    char buffer[MAX_PATH];
+    GetModuleFileNameA(0, buffer, MAX_PATH);
+
+    std::string const result(buffer);
+    return chop_last_slash(result);
+}
+
+static HWND create_output_window() {
+    WNDCLASSEXW window_class = {};
+
+    window_class.cbSize = sizeof(window_class);
+    window_class.lpfnWndProc = &window_proc;
+    window_class.hInstance = GetModuleHandleW(0);
+    window_class.hIcon = LoadIconA(0, IDI_APPLICATION);
+    window_class.hCursor = LoadCursorA(0, IDC_ARROW);
+    window_class.lpszClassName = L"ConfiguratorClass";
+
+    HWND result = 0;
+    if(RegisterClassExW(&window_class))
+    {
+        DWORD style = WS_OVERLAPPEDWINDOW|WS_SIZEBOX;
+
+        result = CreateWindowW(
+                window_class.lpszClassName, L"konfigurator", style,
+                CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
+                0, 0, window_class.hInstance, 0);
+    }
+
+    return result;
+}
 
 int main(int argc, char **argv) {
-    program::init();
+    std::string local_binary_path = get_binary_path();
+    std::string parent_binary_path = chop_last_slash(local_binary_path);
+    std::string parent_data_path = parent_binary_path + "/data";
 
-    // Create and register a window class
-    WNDCLASSEXW wc = {};
-    wc.cbSize = sizeof(wc);
-    wc.lpfnWndProc = WindowProc;
-    wc.hInstance = GetModuleHandle(0);
-    wc.lpszClassName = L"HelloSailor";
+    program::models_path = parent_data_path + "/models";
+    program::config_path = parent_data_path + "/config";
 
-    RegisterClassExW(&wc);
+    program::load_models();
 
-    // Create window
-    DWORD style = WS_OVERLAPPEDWINDOW|WS_SIZEBOX;
-
-    HWND hwnd = CreateWindowW(
-        wc.lpszClassName, L"Konfigurator", style,
-        CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
-        0, 0, wc.hInstance, 0);
+    HWND window = create_output_window();
 
     // Create D3D11 device, context and DXGI swap chain
     {
@@ -46,7 +101,7 @@ int main(int argc, char **argv) {
         desc.BufferDesc.RefreshRate.Denominator = 1;
         desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        desc.OutputWindow = hwnd;
+        desc.OutputWindow = window;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
         desc.Windowed = TRUE;
@@ -65,13 +120,11 @@ int main(int argc, char **argv) {
                     0, feature_levels, 1, D3D11_SDK_VERSION, &desc, &dxgi_swap_chain,
                     &d3d11_device, 0, &d3d11_device_context);
         }
-
-        assert(SUCCEEDED(result));
     }
 
     // Show the window
-    ShowWindow(hwnd, SW_SHOWDEFAULT);
-    UpdateWindow(hwnd);
+    ShowWindow(window, SW_SHOWDEFAULT);
+    UpdateWindow(window);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -81,7 +134,7 @@ int main(int argc, char **argv) {
     ImGui::StyleColorsDark();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplWin32_Init(hwnd);
+    ImGui_ImplWin32_Init(window);
     ImGui_ImplDX11_Init(d3d11_device, d3d11_device_context);
 
     // Our state
@@ -141,27 +194,3 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-// Forward declare message handler from imgui_impl_win32.cpp
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-LRESULT WINAPI WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-        return true;
-
-    switch (msg) {
-        case WM_SIZE:
-            if (wParam == SIZE_MINIMIZED)
-                return 0;
-            resize_width = (UINT)LOWORD(lParam); // Queue resize
-            resize_height = (UINT)HIWORD(lParam);
-            return 0;
-        case WM_SYSCOMMAND:
-            if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
-                return 0;
-            break;
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-    }
-    return DefWindowProcW(hWnd, msg, wParam, lParam);
-}
